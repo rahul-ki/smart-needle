@@ -1,0 +1,30 @@
+IN HTML:
+CREATE A BUTTON
+<button onClick={this.handleClick} >Get Vaccine Details</button>
+
+IN JS\\\;
+import web3 from './web3';
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    let contractABI = window.web3.eth.contract([{"constant":false,"inputs":[{"name":"_vaccineID","type":"uint256"},{"name":"_temperature","type":"int256"},{"name":"_long","type":"int256"},{"name":"_lat","type":"int256"}],"name":"addDetails","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_vaccineID","type":"uint256"},{"indexed":false,"name":"timestamp","type":"uint256"},{"indexed":false,"name":"temperature","type":"int256"},{"indexed":false,"name":"long","type":"int256"},{"indexed":false,"name":"lat","type":"int256"}],"name":"NewDetails","type":"event"}]);
+
+    this.state =  {
+      contractInstance : contractABI.at('0x8e824e179bddc6d31a519194255b1a0918068850'),
+      address: '',
+      pvtKey: ''
+    }
+    //this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick=this.handleClick.bind(this);
+  }
+
+  async handleClick() {
+    const {NewDetails} = this.state.contractInstance;
+
+    await NewDetails({}, { fromBlock: 2750778, toBlock: 2750820 })
+				.get((error, eventResult) => {
+          console.log(JSON.stringify(eventResult));
+        })
+  }
