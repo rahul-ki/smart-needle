@@ -1,8 +1,52 @@
-IN HTML:
-CREATE A BUTTON
-<button onClick={this.handleClick} >Get Vaccine Details</button>
+//INSTALL NETHEREUM.WEB3:
+dotnet add package Nethereum.Web3 
+or
+dotnet add package Nethereum.Portable
 
-IN JS\\\;
+
+//USE:
+public async Task handleClick()
+var web3 = new Nethereum.Web3.Web3();
+
+var abi = @"[{"constant":false,"inputs":[{"name":"_vaccineID","type":"uint256"},{"name":"_temperature","type":"int256"},{"name":"_long","type":"int256"},{"name":"_lat","type":"int256"}],"name":"addDetails","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_vaccineID","type":"uint256"},{"indexed":false,"name":"timestamp","type":"uint256"},{"indexed":false,"name":"temperature","type":"int256"},{"indexed":false,"name":"long","type":"int256"},{"indexed":false,"name":"lat","type":"int256"}],"name":"NewDetails","type":"event"}]";
+var contract = web3.Eth.GetContract(abi, '0x8e824e179bddc6d31a519194255b1a0918068850');
+
+var DetailsEvent = contract.GetEvent("NewDetails");
+
+var filterAll = await DetailsEvent.CreateFilterAsync();
+
+var log = await DetailsEvent.GetFilterChanges<DetailedEvent>(filterAll);
+}
+public class DetailedEvent
+ {
+    [Parameter("uint", "_vaccineID", 1, false)]
+    public uint _vaccineID {get; set;}
+
+    [Parameter("uint", "timestamp", 2, false)]
+    public uint timestamp {get; set;}
+
+    [Parameter("int", "temperature", 3, false)]
+    public int temperature {get; set;}
+    
+    [Parameter("int", "long", 4, false)]
+    public int long {get; set;}
+    
+    [Parameter("int", "lat", 5, false)]
+    public int lat {get; set;}
+
+ }
+
+
+
+
+
+
+
+
+
+
+
+
 import web3 from './web3';
 
 class App extends Component {
